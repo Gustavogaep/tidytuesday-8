@@ -16,22 +16,18 @@ women <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 
 # clean and prepare data
 # Load web page
-
 bbc_women <- html("https://www.bbc.co.uk/news/world-55042935")
 
 # Save even and odd indices for data extraction later
-
 odd_index <- seq(1,200,2)
 even_index <- seq(2,200,2)
 
 # Extract name
-
 name <- bbc_women %>% 
   html_nodes("article h4") %>% 
   html_text()
 
 # Extract image
-
 img <- bbc_women %>% 
   html_nodes(".card__header") %>% 
   html_nodes("img") %>% 
@@ -40,14 +36,12 @@ img <- bbc_women %>%
 img <- img[odd_index]
 
 # Extract category
-
 category <- bbc_women %>% 
   html_nodes("article .card") %>% 
   str_extract("card category--[A-Z][a-z]+") %>% 
   str_remove_all("card category--")
 
 # Extract country & role
-
 country_role <- bbc_women %>% 
   html_nodes(".card__header__strapline__location") %>% 
   html_text()
@@ -56,13 +50,11 @@ country <- country_role[odd_index]
 role <- country_role[even_index]
 
 # Extract description
-
 description <- bbc_women %>% 
   html_nodes(".first_paragraph") %>% 
   html_text()
 
 # Finalise data frame
-
 df <- data.frame(
   name,
   img,
@@ -73,8 +65,7 @@ df <- data.frame(
 )
 
 
-### further data preperation 
-
+### further data preperation
 # for illustration purpose delete "unsung hero"
 df = df[-1,]
 
@@ -89,36 +80,35 @@ df_alt$value <- as.factor(df_alt$value)
 df_alt$subject <- rep(1:99,3) 
 df_alt$fill_cat <- rep(df_alt$value[1:99],3)
 
-# clean data 
-
-## delete space after "India "
+### clean data 
+# delete space after "India "
 df_alt$value[which(df_alt$value=="India ")] <-"India"
 
-## delete space after "UK "
+# delete space after "UK "
 df_alt$value[which(df_alt$value=="UK ")] <-"UK"
 
-## delete "-" in "human-rights activist"
+# delete "-" in "human-rights activist"
 df_alt$value[which(df_alt$value=="Human-rights activist")] <-"Human rights activist"
 
-## delete "-" in "Social-justice activist"
+# delete "-" in "Social-justice activist"
 df_alt$value[which(df_alt$value=="Social-justice activist")] <-"Social justice activist"
 
-## shortening "Exiled Uighur from Ghulja (in Chinese, Yining)"
+# shortening "Exiled Uighur from Ghulja (in Chinese, Yining)"
 df_alt$value <- as.character(df_alt$value)
 df_alt$value[which(df_alt$value=="Exiled Uighur from Ghulja (in Chinese, Yining)")] <- "Uyghur"
 df_alt$value <- as.factor(df_alt$value)
 
-## shortening "Minister for Advanced Technologies"
+# shortening "Minister for Advanced Technologies"
 df_alt$value <- as.character(df_alt$value)
 df_alt$value[which(df_alt$value=="Minister for Advanced Technologies")] <- "Minister for Adv. Technologies"
 df_alt$value <- as.factor(df_alt$value)
 
-## shortening "Parliamentary Under Secretary of State"
+# shortening "Parliamentary Under Secretary of State"
 df_alt$value <- as.character(df_alt$value)
 df_alt$value[which(df_alt$value=="Parliamentary Under Secretary of State")] <- "Parl. Under Secretary of State"
 df_alt$value <- as.factor(df_alt$value)
 
-## shortening "UN Women ambassador/model"
+# shortening "UN Women ambassador/model"
 df_alt$value <- as.character(df_alt$value)
 df_alt$value[which(df_alt$value=="UN Women ambassador/model")] <- "UN Women amb./model"
 df_alt$value <- as.factor(df_alt$value)
@@ -126,7 +116,6 @@ df_alt$value <- as.factor(df_alt$value)
 
 
 ## Alluvial plot
-
 # prepare vectors plot design
 cat_len<- length(unique(df_alt$value[which(df_alt$yaxis == "category")]))
 cou_len<- length(unique(df_alt$value[which(df_alt$yaxis == "country")]))
